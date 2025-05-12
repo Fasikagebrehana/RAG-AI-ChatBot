@@ -6,7 +6,6 @@ import logging
 from PIL import Image
 import numpy as np
 
-# Set up logging
 logging.basicConfig(filename="../logs/pdf_processing.log", level=logging.INFO)
 
 def is_text_based_pdf(pdf_path):
@@ -19,7 +18,6 @@ def is_text_based_pdf(pdf_path):
         return False
 
 def enhance_image(image):
-    # Enhance image for better OCR
     image = image.convert("L")
     image = np.array(image)
     image = (image - image.min()) * (255 / (image.max() - image.min()))
