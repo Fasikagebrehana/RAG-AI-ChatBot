@@ -1,12 +1,13 @@
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 import os
 
-def chunk_text(text, max_words=500):
-    words = text.split()
-    chunks = []
-    for i in range(0, len(words), max_words):
-        chunk = " ".join(words[i:i + max_words])
-        chunks.append(chunk)
-    return chunks
+def chunk_text(text):
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,  # Characters, adjustable
+        chunk_overlap=100,
+        separators=["\n\n", "\n", ".", " "]  # Prioritize paragraph/section breaks
+    )
+    return text_splitter.split_text(text)
 
 def chunk_documents(input_dir="../extracted_text/"):
     documents = []
@@ -16,7 +17,14 @@ def chunk_documents(input_dir="../extracted_text/"):
                 content = f.read()
             chunks = chunk_text(content)
             chunked_data = [
-                {"text": chunk, "metadata": {"filename": filename, "chunk_id": i}}
+                {
+                    "text": chunk,
+                    "metadata": {
+                        "filename": filename,
+                        "chunk_id": i,
+                        "keywords": ["divorce", "property", "rights"] if "family" in filename.lower() else ["rights"]  # Example keywords
+                    }
+                }
                 for i, chunk in enumerate(chunks)
             ]
             documents.append({"filename": filename, "content": content, "chunked_data": chunked_data})
