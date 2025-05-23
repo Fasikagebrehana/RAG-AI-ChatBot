@@ -8,7 +8,6 @@ import google.generativeai as genai
 from functools import lru_cache
 import time
 from dotenv import load_dotenv
-import torch
 
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
@@ -17,10 +16,15 @@ if not api_key:
 genai.configure(api_key=api_key)
 
 @lru_cache(maxsize=1)
-def load_rag_pipeline(vector_store_dir="../vector_store/"):
+def load_rag_pipeline(vector_store_dir=None):
+    if vector_store_dir is None:
+        # Get the directory where this script is located
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        vector_store_dir = os.path.join(current_dir, "vector_store")
+    
     embedding_model = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2",
-        model_kwargs={"device": "cuda" if torch.cuda.is_available() else "cpu"}
+        model_kwargs={"device": "cpu"}  # Explicitly set to CPU
     )
     vector_store = FAISS.load_local(vector_store_dir, embedding_model, allow_dangerous_deserialization=True)
     llm = GoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.5, google_api_key=api_key)
