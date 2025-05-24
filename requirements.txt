@@ -11,4 +11,4 @@ fastapi==0.104.1
 uvicorn==0.24.0
 pydantic==2.7.4
 python-multipart==0.0.6
-torch==2.3.0+cpu  # Updated to a more compatible version
+torch==2.3.0+cpu
