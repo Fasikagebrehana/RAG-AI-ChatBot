@@ -2,10 +2,10 @@ services:
   - type: web
     name: legal-chatbot-api
     runtime: python
-    buildCommand: pip install torch==2.7.0+cpu --index-url https://download.pytorch.org/whl/cpu --no-cache-dir && pip install -r requirements.txt --no-cache-dir
+    buildCommand: pip install torch==2.3.0+cpu --index-url https://download.pytorch.org/whl/cpu --no-cache-dir && pip install -r requirements.txt --no-cache-dir
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: 3.10.0  # Changed to 3.10.0
       - key: GOOGLE_API_KEY
         sync: false
